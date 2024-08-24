@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Session Configuare</title>
+    <script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
 </head>
 <body>
-    
+    <h1>Session Create</h1>
+    <div hx-ext="response-targets">
+        <form hx-post="/session/cmd/create" hx-target-error="#error">
+            <input minlength="3" name="session_name" type="text"/>
+            <button type="submit">Create</button>
+            <span>TODO add other options like who to allow in</span>
+        </form>
+        <span id="error" role="alert" style="color:red;"></span>
+    </div> 
 
-
-
-
-    <a href="/session/cmd/example-session-id">Join</a>
 </body>
 </html>

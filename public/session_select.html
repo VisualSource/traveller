@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Session Selection</title>
     <script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
 </head>
 <body style="display:flex; gap: 10px;">
 
@@ -17,11 +18,12 @@
         </ul>
     </section>
 
-    <section>
+    <section hx-ext="response-targets">
         <h1>Join Session</h1>
-        <form hx-post="/session/join">
+        <form hx-post="/session/join" hx-target-error="#join-error">
             <input type="text" name="session_code" placeholder="session code"/>
             <button type="submit">Join</button>
+            <span role="alert" id="join-error" style="color:red;"></span>
         </form>
     </section>
 
