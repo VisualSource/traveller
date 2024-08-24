@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
+</head>
+<body x-data="{ tag: 'login' }" hx-ext="response-targets">
+
+    <section x-show="tag==='login'" >
+        <div >
+            <h1>Login</h1>
+            <!-- If valid will return HX-Redirect else will have HX-Trigger to view totp-->
+            <form hx-post="/account/login" hx-target-error="#login-error">
+                <label>
+                    Username 
+                    <input name="username" placeholder="Username" type="text"/>
+                    <span role="alert"></span>
+                </label>
+                <label>
+                    Password
+                    <input name="password" placeholder="Password" type="password"/>
+                    <span role="alert"></span>
+                </label>
+              
+                <input type="submit" value="Submit"/>
+            </form>
+            <span role="alert" id="login-error" style="color:red;"></span>
+
+        </div>
+
+        <footer>
+            <button @click="tag='signup'">Signup</button>
+        </footer>
+    </section>
+
+    <section id="signup-form" x-show="tag==='signup'">
+        <div>
+            <h1>Signup</h1>
+
+            <form hx-post="/account/signup" hx-target-error="#signin-error">
+                <label>
+                    Username
+                    <input name="username" placeholder="Username" type="text"/>  
+                    <span id="signup-username-alert" role="alert"></span>
+                </label>
+                <label>
+                    Password
+                    <input id="signup-psd" name="password" placeholder="Password" type="password"/>
+                    <span id="signup-psd-alert" role="alert"></span>
+                </label>
+                <label>
+                    Reenter password
+                    <input name="repassword" id="signup-repsd" type="password" placeholder="Password"/>
+                    <span role="alert" id="signup-repsd-alert"></span>
+                </label>
+                <button type="submit">Submit</button>
+            </form>
+            <span role="alert" id="signin-error" style="color:red;"></span>
+        </div>
+
+        <footer>
+            <button @click="tag='login'">Login</button>
+        </footer>
+    </section>
+</body>
+</html>

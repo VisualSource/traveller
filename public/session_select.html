@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Selection</title>
+    <script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+</head>
+<body style="display:flex; gap: 10px;">
+
+    <section >
+        <h1>Joined Sessions</h1>
+        <ul hx-get="/session/joined" hx-trigger="load">
+            <li>
+                Loading Sessions
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h1>Join Session</h1>
+        <form hx-post="/session/join">
+            <input type="text" name="session_code" placeholder="session code"/>
+            <button type="submit">Join</button>
+        </form>
+    </section>
+
+    <section>
+        <h1>Start Session</h1>
+        <a href="/session/create">Start</a>
+    </section>
+</body>
+</html>

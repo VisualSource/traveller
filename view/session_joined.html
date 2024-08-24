@@ -1,0 +1,6 @@
+{{range .sessions}}
+<li>
+    <h3>{{.Name}}</h3>
+    <a href="/session/in/{{.ID.String}}">Join</a>
+</li>
+{{end}}
