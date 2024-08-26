@@ -201,13 +201,13 @@ func (h *Handler) UserJoinedSessions(c echo.Context) (err error) {
 
 	userId := sess.Values[Session_ID]
 
-	stmt, err := h.db.Prepare(strings.Join([]string{"SELECT * FROM 'session' WHERE players LIKE '%\"", userId.(string), "\"%'"}, ""))
+	stmt, err := h.db.Prepare(strings.Join([]string{"SELECT * FROM 'session' WHERE players LIKE '%\"", userId.(string), "\"%' OR admin = ?;"}, ""))
 	if err != nil {
 		log.Println(err)
 		return c.String(http.StatusInternalServerError, "Failed to load sessions")
 	}
 
-	rows, err := stmt.Query()
+	rows, err := stmt.Query(userId)
 	if err != nil {
 		log.Println(err)
 		return c.HTML(http.StatusInternalServerError, "<span>Failed to load</span>")

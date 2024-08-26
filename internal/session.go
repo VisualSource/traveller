@@ -32,7 +32,7 @@ func RegisterSessionPages(e *echo.Echo, h *handler.Handler) {
 	g.File("/select", "public/session_select.html")
 	g.File("/create", "public/session_create.html")
 
-	g.File("/in/:id", "public/session.html")
+	g.File("/:id", "public/session.html")
 
 	g.GET("/view", h.View).Name = "session-view"
 	// curd end points
@@ -41,5 +41,5 @@ func RegisterSessionPages(e *echo.Echo, h *handler.Handler) {
 
 	g.POST("/cmd/create", h.CreateSession).Name = "create-session"
 
-	g.GET("/ws", h.WS).Name = "ws"
+	g.GET("/:sessionId/ws", h.WS).Name = "ws"
 }

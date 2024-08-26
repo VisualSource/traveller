@@ -18,7 +18,10 @@ const SESSION_NAME = "session"
 func (h *Handler) View(c echo.Context) error {
 	sess, err := session.Get("session", c)
 	if err != nil {
-		return err
+		return c.Render(http.StatusUnauthorized, "session_error.html", map[string]interface{}{
+			"message": "Invalid user session",
+			"code":    http.StatusUnauthorized,
+		})
 	}
 
 	user := sess.Values[Session_ID].(string)
@@ -28,26 +31,37 @@ func (h *Handler) View(c echo.Context) error {
 
 	url, err := url.Parse(currentURL)
 	if err != nil {
-		return c.HTML(http.StatusBadRequest, "Missing HX-Current-URL")
+		return c.Render(http.StatusBadRequest, "session_error.html", map[string]interface{}{
+			"message": "Unable to determin session (Missing Header 'HX-Current-URL')",
+			"code":    http.StatusBadRequest,
+		})
 	}
 
 	path := strings.Split(url.Path, "/")
-	if len(path) < 4 {
-		return c.HTML(http.StatusBadRequest, "Invalid bad request")
-	}
-	l := len(path)
-
-	if path[l-2] != "in" || path[l-3] != "session" {
-		return c.HTML(http.StatusBadRequest, "Invalid bad request")
+	if len(path) != 3 {
+		return c.Render(http.StatusBadRequest, "session_error.html", map[string]interface{}{
+			"message": "Unable to get session (1)",
+			"code":    http.StatusBadRequest,
+		})
 	}
 
-	id := path[l-1]
+	if path[1] != "session" {
+		return c.Render(http.StatusBadRequest, "session_error.html", map[string]interface{}{
+			"message": "Unable to get session (2)",
+			"code":    http.StatusBadRequest,
+		})
+	}
+
+	id := path[2]
 
 	var session model.Session
 	log.Printf("Session id is: %s", id)
 	err = session.GetSession(h.db, id)
 	if err != nil {
-		return c.HTML(http.StatusNotFound, "No session found!")
+		return c.Render(http.StatusNotFound, "session_error.html", map[string]interface{}{
+			"message": "No session found",
+			"code":    http.StatusNotFound,
+		})
 	}
 
 	if session.Admin == user {

@@ -2,11 +2,14 @@ package socket
 
 import (
 	"bytes"
+	"encoding/json"
 	"log"
-	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
 )
 
 const (
@@ -27,15 +30,26 @@ var upgrader = websocket.Upgrader{
 }
 
 type Client struct {
-	hub  *Hub
-	conn *websocket.Conn
-	send chan []byte
+	hub       *Hub
+	conn      *websocket.Conn
+	send      chan []byte
+	UserId    string
+	SessionId string
+}
+
+type clientBoardcastMessage struct {
+	Message string
+	Target  string
+}
+
+func (c *Client) GetId() string {
+	return strings.Join([]string{c.UserId, c.SessionId}, ":")
 }
 
 func (c *Client) readPump() {
 	defer func() {
-		c.hub.unregister <- c
 		c.conn.Close()
+		c.hub.unregister <- c.GetId()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
@@ -43,13 +57,40 @@ func (c *Client) readPump() {
 	for {
 		_, msg, err := c.conn.ReadMessage()
 		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+			if websocket.IsCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) || websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				break
 			}
+			log.Printf("error: %v\n", err)
+			continue
 		}
 		msg = bytes.TrimSpace(bytes.Replace(msg, newline, space, -1))
-		c.hub.broadcast <- msg
+
+		var data ClientMessage
+		err = json.Unmarshal(msg, &data)
+		if err != nil {
+			log.Printf("JSON unmarshal error: %v\n", err)
+			continue
+		}
+
+		switch data.ContentType {
+		case "BroadcastMessage":
+			var d clientBoardcastMessage
+			err = data.parsePayload(&d)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			c.hub.broadcast <- NewBroadcastMessage(c.SessionId, d.Message, d.Target, c.UserId)
+		case "PrivateMessage":
+			var d clientBoardcastMessage
+			err = data.parsePayload(&d)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			c.hub.message <- NewPrivateMessage(c.UserId, d.Target, c.SessionId, d.Message)
+		}
 	}
 }
 
@@ -89,14 +130,22 @@ func (c *Client) writePump() {
 	}
 }
 
-func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) error {
-	conn, err := upgrader.Upgrade(w, r, nil)
+func ServeWs(hub *Hub, c echo.Context) error {
+	sess, err := session.Get("session", c)
+	if err != nil {
+		return err
+	}
+
+	conn, err := upgrader.Upgrade(c.Response().Writer, c.Request(), nil)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+	sessionId := c.Param("sessionId")
+	userId := sess.Values["sub"].(string)
+
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), SessionId: sessionId, UserId: userId}
 	client.hub.register <- client
 
 	go client.writePump()

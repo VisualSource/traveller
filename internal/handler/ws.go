@@ -7,5 +7,5 @@ import (
 )
 
 func (h *Handler) WS(c echo.Context) error {
-	return socket.ServeWs(h.hub, c.Response().Writer, c.Request())
+	return socket.ServeWs(h.hub, c)
 }

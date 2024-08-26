@@ -1,7 +1,29 @@
-<div>
-    I am cmd
-    <form id="chat-general" @submit.prevent="sendWS($event)">
-        <textarea name="msg"></textarea>
-        <button type="submit">Send</button>
-    </form>
-</div>
+<header>
+    <h1>Command View</h1>
+</header>
+<main>
+    <aside>
+        <h2>Player List</h2>
+        <ul>
+                
+    
+        </ul>
+    </aside>
+    <section>
+    
+    </section>
+    <section>
+        <div id="global-feed">
+            <div>
+                I a boardcasted message
+            </div>
+        </div>
+        <form id="chat-general" @submit.prevent="broadcastMessage($event)">
+            <textarea name="msg"></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </section>
+</main>
+<footer>
+
+</footer>
