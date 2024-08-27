@@ -1,4 +1,5 @@
-"use strict"
+import { ReconnectingWebsocket } from "./reconnecting_websocket.js";
+
 
 /**
  * Fetchs session from url
@@ -11,9 +12,11 @@ function getSessionId(){
 
 
 class Client {
-    /** @type {Websocket} */
+
+
+    /**@type {ReconnectingWebsocket} */
     #ws
-    /** @type {string} */
+    /**@type {string} */
     #session
     constructor(){
         /**
@@ -27,24 +30,37 @@ class Client {
     }
     onSocketClose = (ev) => {
         console.info("Websocket has closed!");
-        setTimeout(()=>{
-            this.init();
-        },5000);
     }
     /**
      * 
-     * @param {} msg 
+     * @param {WebsocketMessageEvent} msg 
      */
     onSocketMessage = (msg) => {
         try {
             console.log(msg);
-            const data = JSON.parse(msg.data);
+            const data = JSON.parse(msg.detail.data);
             switch (data.contentType) {
                 case "BoradcastMessage": {
                     const feed = document.getElementById("global-feed");
 
                     const el = document.createElement("div");
-                    el.textContent = data.content;
+                    el.style = "margin: 5px 8px; border: black solid 1px;padding: 2px 4px;"
+
+
+                    const header = document.createElement("h4");
+                    header.style = "margin-bottom:0;margin-top:2px;"
+                    header.textContent = "Notification";
+
+                    el.appendChild(header);
+
+                    el.appendChild(document.createElement("hr"));
+
+                    const text = document.createElement("p");
+                    text.style = "margin-top:0px;-webkit-line-clamp:2;overflow:hidden;-webkit-box-orient:vertical;display:-webkit-box;";
+                    text.textContent = data.content;
+
+                    el.appendChild(text);
+
                     feed.appendChild(el);
                     break;
                 }
@@ -60,18 +76,16 @@ class Client {
     }
     /**
      * 
-     * @param {unknown} err 
+     * @param {WebsocketErrorEvent} err 
      */
-    onSocketError = (err) => {
-        console.error(err);
-        this.#ws.close();
-    }
+    onSocketError = (err) => console.error(err);
     init(){
-        this.#ws = new WebSocket(`ws://${document.location.host}/session/${this.#session}/ws`);
+        this.#ws = new ReconnectingWebsocket(`ws://${document.location.host}/session/${this.#session}/ws`);
         this.#ws.addEventListener("close",this.onSocketClose);
         this.#ws.addEventListener("error",this.onSocketError);
         this.#ws.addEventListener("message",this.onSocketMessage);
         this.#ws.addEventListener("open",this.onSocketOpen);
+        this.#ws.addEventListener("reconnecting",(ev)=>console.log(ev));
     }
     /**
      * Send a message to all in session
@@ -104,6 +118,20 @@ client.init();
  */
 function broadcastMessage(ev){
     const data = new FormData(ev.target);
+
+    /**@type {HTMLFormElement} */
+    const form = ev.target
+    form.reset();
+
     const msg = data.get("msg");
     client.broadcast(msg);
 }
+
+
+window.showPlayer = function(){
+    /**@type {HTMLDialogElement} */
+    const dialog = document.getElementById("player-info");
+    dialog.showModal();
+}
+
+window.broadcastMessage = broadcastMessage;

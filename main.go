@@ -38,6 +38,7 @@ func main() {
 	defer h.Close()
 
 	e := echo.New()
+	e.Debug = true
 
 	e.Renderer = &TemplateRegistry{
 		templates: template.Must(template.ParseGlob("view/*.html")),

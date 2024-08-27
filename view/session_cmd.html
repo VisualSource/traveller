@@ -1,29 +1,37 @@
-<header>
-    <h1>Command View</h1>
-</header>
-<main>
-    <aside>
-        <h2>Player List</h2>
-        <ul>
-                
-    
-        </ul>
-    </aside>
-    <section>
-    
-    </section>
-    <section>
-        <div id="global-feed">
+<div style="display: flex; flex-direction: column;height: 100%;">
+    <header>
+        <h1>Command View</h1>
+    </header>
+    <main style="display: flex;overflow: hidden; height: 100%;">
+        <aside style="width:10%; background-color: indianred;">
+            <h2>Player List</h2>
             <div>
-                I a boardcasted message
+                <button style="border: none;" @click="showPlayer()">
+                    <h6>Player Name</h6>
+                    <p>Status: <span>Player Creation</span></p>
+                 </button> 
             </div>
-        </div>
-        <form id="chat-general" @submit.prevent="broadcastMessage($event)">
-            <textarea name="msg"></textarea>
-            <button type="submit">Send</button>
-        </form>
-    </section>
-</main>
-<footer>
+        </aside>
+        <section style="flex: 1 1 auto; background-color: black;">
+        
+        </section>
+        <section style="width: 15%;background-color: yellowgreen;display: flex;flex-direction: column;gap:4px;">
+            <h3>Notifcations</h3>
+            <div id="global-feed" style="overflow-y:scroll;scrollbar-width: thin; height: 100%;">
+              
+            </div>
+            <form id="chat-general" @submit.prevent="broadcastMessage($event)" style="display: flex;flex-direction: column;gap:2px; margin-bottom: 4px;">
+                <textarea name="msg" cols="5" rows="10" style="font-size: 0.8rem;letter-spacing: 1px;" placeholder="Message"></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+    
+    </footer>
+    <dialog id="player-info">
 
-</footer>
+
+
+    </dialog>
+</div>
