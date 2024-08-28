@@ -14,7 +14,7 @@ type UserLogin struct {
 func RegisterAuthPages(e *echo.Echo, h *handler.Handler) {
 
 	// Pages
-	e.File("/account", "public/account.html")
+	e.File("/account", "web/app/account.html")
 
 	// End Points
 

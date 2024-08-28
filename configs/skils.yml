@@ -1,0 +1,17 @@
+skils:
+  - name: Admin
+    id: admin
+    allows_specification: false
+    allowed_specifications: null
+  - id: advocate
+    name: Advocate
+    allows_specification: false
+    allowed_specifications: null
+  - id: animals
+    name: Animals
+    allows_specification: true 
+    allowed_specifications: null
+  - id: athletics
+    name: Athletics
+    allows_specification: true 
+    allowed_specifications: ["dexterity","endurance","strength"]

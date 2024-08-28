@@ -46,6 +46,12 @@ class Client {
                     const el = document.createElement("div");
                     el.style = "margin: 5px 8px; border: black solid 1px;padding: 2px 4px;"
 
+                    el.addEventListener("click",()=>{
+
+                        const dialog = showModal("message-content")
+                        dialog.querySelector("p").textContent = data.content;
+                    });
+
 
                     const header = document.createElement("h4");
                     header.style = "margin-bottom:0;margin-top:2px;"
@@ -111,7 +117,6 @@ const client = new Client();
 client.init();
 
 
-
 /**
  * 
  * @param {SubmitEvent} ev 
@@ -127,11 +132,18 @@ function broadcastMessage(ev){
     client.broadcast(msg);
 }
 
-
-window.showPlayer = function(){
+/**
+ * 
+ * @param {string} id 
+ */
+function showModal(id){
     /**@type {HTMLDialogElement} */
-    const dialog = document.getElementById("player-info");
+    const dialog = htmx.find(`#${id}`)
     dialog.showModal();
+    return dialog;
 }
 
-window.broadcastMessage = broadcastMessage;
+window.traveller = {
+    broadcastMessage,
+    showModal
+}

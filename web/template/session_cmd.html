@@ -6,8 +6,9 @@
         <aside style="width:10%; background-color: indianred;">
             <h2>Player List</h2>
             <div>
-                <button style="border: none;" @click="showPlayer()">
-                    <h6>Player Name</h6>
+                <button style="border: none;" @click="traveller.showModal('player-info')">
+                    <h6>Player Char Name</h6>
+                    <p>AKA: (USERNAME)</p>
                     <p>Status: <span>Player Creation</span></p>
                  </button> 
             </div>
@@ -20,7 +21,7 @@
             <div id="global-feed" style="overflow-y:scroll;scrollbar-width: thin; height: 100%;">
               
             </div>
-            <form id="chat-general" @submit.prevent="broadcastMessage($event)" style="display: flex;flex-direction: column;gap:2px; margin-bottom: 4px;">
+            <form id="chat-general" @submit.prevent="traveller.broadcastMessage($event)" style="display: flex;flex-direction: column;gap:2px; margin-bottom: 4px;">
                 <textarea name="msg" cols="5" rows="10" style="font-size: 0.8rem;letter-spacing: 1px;" placeholder="Message"></textarea>
                 <button type="submit">Send</button>
             </form>
@@ -29,9 +30,167 @@
     <footer>
     
     </footer>
-    <dialog id="player-info">
+    <dialog id="message-content" style="width:10%;height: 15%;padding: 0;">
+        <header style="display: flex;justify-content: end;">
+            <button @click="htmx.find('#message-content').close()">X</button>
+        </header>
+        <p></p>
+    </dialog>
+    <dialog id="player-info" style="width:90%;height: 90%;padding: 0;">
+       <div style="display: flex;flex-direction: column;height: 100%;overflow:hidden;">
+        <header style="display: flex;justify-content: end;">
+            <button @click="htmx.find('#player-info').close()">X</button>
+        </header>
+        <main style="display: flex;height: 100%;">
+            <section style="width: 100%;background-color: cadetblue; display: flex;">
+                <div style="display: flex;flex-direction: column;">
+                    <div data-id="player-info" style="height: 100%;">
+                        Name: Dzaeth Dar 
+                        Rads: N/A
+                        Age: 43
+                        Species: Vargr
+                        Species Traits: Bite, Heightend Senses
+                        Homeword: N/A
+                    </div>
+                    <div data-id="characteristics" style="height: 100%;">
+                        <h3>Characteristics</h3>
+                        <div>
+                            <div>
+                                <span>Strenght: 4</span>
+                                <span>DM: -1</span>
+                            </div>
+                            <div>
+                                <span>Dexterity: 9</span>
+                                <span>DM: +1</span>
+                            </div>
+                            <div>
+                                <span>Endurance: 3</span>
+                                <span>DM: -1</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <span>Intellect: 12</span>
+                                <span>DM: +2</span>
+                            </div>
+                            <div>
+                                <span>Education: 5</span>
+                                <span>DM: -1</span>
+                            </div>
+                            <div>
+                                <span>Social: 7</span>
+                                <span>DM: 0</span>
+                            </div>
+                        </div>
+                        <div>
+                            <span>PSI: N/A</span>
+                            <span>DM: N/A</span>
+                        </div>
+                    </div>
+                    <div data-id="skills" style="height: 100%;">
+                        <h3>Skills</h3>
+                        <div>Astrogation: <span>1</span></div>
+                        <div>Athletics (dexterity) <span>0</span></div>
+                        <div>Flyer (wing) <span>1</span></div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column;">
+                    <div data-id="augments" style="height: 100%;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>TL</th>
+                                    <th>Improvement</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A</td>
+                                    <td>B</td>
+                                    <td>C</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div data-id="finances" style="height: max-content; display: flex; flex-wrap: wrap; gap: 5px;">
+                        <div>
+                            <h4>Pension:</h4>
+                            <p>CR: 2,000</p>
+                            <p>Type: Yearly</p>
+                        </div>
+                        <div>
+                            <h4>Debt:</h4>
+                            <p>CR: N/A </p>
+                        </div>
+                        <div>
+                            <h4>Cash On Hash:</h4>
+                            <p>CR: 9,920</p>
+                        </div>
+                
+                        <div>
+                            <h4>Monthly ship payments:</h4>
+                            <p>CR: N/A </p>
+                        </div>
+                  
+                        <div>
+                            <h4>Living Cost:</h4>
+                            <p>CR: 1,500</p>
+                            <p>Type: monthly</p>
+                        </div>
+                    </div>
+                    <div data-id="study" style="height: max-content;">
+                        <div>Training in Skill: <span></span></div>
+                        <div>Weeks: <span></span>/<span>24</span></div>
+                        <div>Study Periods Complete: <span></span></div>
+                    </div>
+                    <div style="height: 100%;">
+                        Notes
+                    </div>
+                </div>
 
 
-
+            </section>
+            <section style="background-color: crimson;width: 20rem; overflow: hidden; display: flex; flex-direction: column;">
+                <div>
+                    Inventory
+                </div>
+                <div style="overflow-y:scroll; height: 100%; border-top: black solid 1px; gap: 4px; border-bottom: black solid 1px; display: flex;flex-direction: column;">
+                    <div data-type="weapon" data-mass="15" style="padding: 4px 6px;">
+                        Weapon:
+                        Name: Stunner
+                        TL:  10
+                        Range: 5ft
+                        Damage: 2D+3
+                        KG: 15kg
+                        Magazine: 100
+                        Traits: <span>Stun</span><span>zero-G</span>
+                    </div>
+                    <div data-type="equipment" data-mass="0" style="padding: 4px 6px;">
+                        Mobile Comm (TL8)
+                    </div>
+                    <div data-type="armor" data-mass="10" style="padding: 4px 6px;">
+                        Armor:
+                        Type: Cloth (TL7)
+                        Rad: None 
+                        Protection: 15
+                        KG: 10KG
+                        Options: None
+                    </div>
+                </div>
+                <div>
+                    Total Carried Mass: <span>NAN</span>
+                </div>
+            </section>
+            <aside style="width: 20rem;display: flex;flex-direction: column;">
+                <div style="height: 100%; overflow-y: scroll;"></div>
+                <form @submit.prevent="traveller.broadcastMessage($event)"  style="display: flex;flex-direction: column;gap:2px; margin-bottom: 4px;">
+                    <textarea name="msg" cols="5" rows="10" style="font-size: 0.8rem;letter-spacing: 1px;" placeholder="Message"></textarea>
+                    <button>Send</button>
+                </form>
+            </aside>
+        </main>
+       </div>
     </dialog>
 </div>

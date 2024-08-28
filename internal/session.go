@@ -29,10 +29,10 @@ func RegisterSessionPages(e *echo.Echo, h *handler.Handler) {
 	g.Use(sessionRequired)
 
 	// html pages
-	g.File("/select", "public/session_select.html")
-	g.File("/create", "public/session_create.html")
+	g.File("/select", "web/app//session_select.html")
+	g.File("/create", "web/app/session_create.html")
 
-	g.File("/:id", "public/session.html")
+	g.File("/:id", "web/app/session.html")
 
 	g.GET("/view", h.View).Name = "session-view"
 	// curd end points

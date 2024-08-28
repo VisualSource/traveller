@@ -41,7 +41,7 @@ func main() {
 	e.Debug = true
 
 	e.Renderer = &TemplateRegistry{
-		templates: template.Must(template.ParseGlob("view/*.html")),
+		templates: template.Must(template.ParseGlob("web/template/*.html")),
 	}
 
 	e.Pre(middleware.RemoveTrailingSlash())
@@ -50,9 +50,9 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 
-	e.Static("/static", "./static")
+	e.Static("/static", "./web/static")
 
-	e.File("/", "public/index.html")
+	e.File("/", "web/app/index.html")
 
 	traveller.RegisterAuthPages(e, h)
 	traveller.RegisterSessionPages(e, h)

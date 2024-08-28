@@ -1,0 +1,63 @@
+careers:
+  - id: agent
+    name: Agent
+    description: Law enforcement agencies, corporate operatives, spies, and others who work in the shadows.
+    qualification:
+      - id: INT
+        value: 6
+        op: equal_or_more
+    assignments:
+      - name: Law Enforcement
+        id: law_enforcement_agent
+        description: You are a police officer or detective.
+      - name: Intelligence
+        id: intelligence_agent
+        description: You work as a spy or saboteur.
+      - name: Corporate
+        id: corporate_agent
+        description: You work for a corporation, spying on rival organisations.
+    mishaps:
+      - Severely injured (this is the same as a result of 2 on the Injury Table). Alternatively, roll twice on the Injury Table and take the lower result.
+    events:
+      - Disaster! Roll on the Mishap Table, but you are not ejected from this career.    
+    skils_and_training:
+      personal_development:
+      service_skils:
+      adv_edu:
+      role: 
+        law_enforcement_agent:
+        intelligence_agent: 
+        corporate_agent:
+    ranks_and_bonues:
+        law_enforcement_agent:
+          - name: Rookie
+            level: 0
+            bonus: null 
+          - name: Corporal
+            level: 1
+            bonus:
+                skill: Streetwise
+                value: 1
+          - name: Sergeant
+            level: 2
+            bonus: null
+          - name: Detective
+            level: 3
+            bonus: null
+          - name: Lieutenant
+            level: 4
+            bonus:
+              skill: Investigate
+              value: 1
+          - name: Chief
+            level: 5
+            bonus:
+              skill: Admin
+              value: 1
+          - name: Commissioner
+            level: 6
+            bonus:
+              skill: SOC
+              value: 1
+        intelligence_agent: 
+        corporate_agent:
