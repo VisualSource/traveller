@@ -10,7 +10,6 @@ function getSessionId(){
     return path.at(-1)
 }
 
-
 class Client {
 
 
@@ -35,7 +34,7 @@ class Client {
      * 
      * @param {WebsocketMessageEvent} msg 
      */
-    onSocketMessage = (msg) => {
+    onSocketMessage = async (msg) => {
         try {
             console.log(msg);
             const data = JSON.parse(msg.detail.data);
@@ -45,13 +44,7 @@ class Client {
 
                     const el = document.createElement("div");
                     el.style = "margin: 5px 8px; border: black solid 1px;padding: 2px 4px;"
-
-                    el.addEventListener("click",()=>{
-
-                        const dialog = showModal("message-content")
-                        dialog.querySelector("p").textContent = data.content;
-                    });
-
+                    el.setAttribute("data-type","message");
 
                     const header = document.createElement("h4");
                     header.style = "margin-bottom:0;margin-top:2px;"
@@ -71,6 +64,35 @@ class Client {
                     break;
                 }
                 case "PrivateMessage":{
+                    const target = htmx.find("#private-message-board");
+
+                    // linegreen for current user, blue for other
+                    const textboxColor = "limegreen";
+
+                    const el = document.createElement("div");
+                    el.style = `margin: 5px 8px; border: black solid 1px;padding: 2px 4px;display:flex; background-color: ${textboxColor};`
+
+                    /*const i = document.createElement("img");
+                    i.style="height:45px;width:45px";
+
+                    const encoder = new TextEncoder();
+                    const item = encoder.encode("collin_blosser@yahoo.com")
+
+                    const hash = await crypto.subtle.digest("SHA-256",item).then(e=> Array.from(new Uint8Array(e)) ).then(e=>e.map(b=>b.toString(16).padStart(2,"0")).join(""));
+
+                    i.src = `https://www.gravatar.com/avatar/${hash}`;
+                    i.alt="user-icon"
+
+                    el.appendChild(i);*/
+
+                    const text = document.createElement("p");
+                    text.style = "margin-top:0px;";
+                    text.textContent = data.message;
+
+                    el.appendChild(text);
+
+                    target.appendChild(el);
+
                     break;
                 }
                 default:
@@ -121,7 +143,7 @@ client.init();
  * 
  * @param {SubmitEvent} ev 
  */
-function broadcastMessage(ev){
+function broadcastMessage(ev, target){
     const data = new FormData(ev.target);
 
     /**@type {HTMLFormElement} */
@@ -129,7 +151,43 @@ function broadcastMessage(ev){
     form.reset();
 
     const msg = data.get("msg");
-    client.broadcast(msg);
+
+    if(!target) {
+        client.broadcast(msg);
+        return;
+    }
+
+    client.message(target,msg);
+}
+
+/**
+ * @param {MouseEvent} ev 
+ */
+function onInventoryClick(ev){
+    /**
+     * @type {HTMLElement}
+     */
+    const source = ev.target
+    const parent = source.closest("div[data-id='item']");
+    if(!parent) return;
+    console.log(parent);
+    
+}
+
+/**
+ * @param {MouseEvent} ev 
+ */
+function viewMessage(ev){
+    /**
+     * @type {HTMLDivElement | null}
+     */
+    const parent = ev.target.closest("div[data-type='message']");
+    if(!parent) return;
+
+    const messageContent = parent.querySelector("p").textContent;
+    if(!messageContent) return;
+    const dialog = showModal("message-content")
+    dialog.querySelector("p").textContent = messageContent;
 }
 
 /**
@@ -144,6 +202,8 @@ function showModal(id){
 }
 
 window.traveller = {
+    onInventoryClick,
     broadcastMessage,
-    showModal
+    showModal,
+    viewMessage
 }
