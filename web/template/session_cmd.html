@@ -1,20 +1,25 @@
 <div style="display: flex; flex-direction: column;height: 100%;">
     <header>
         <h1>Command View</h1>
+        <div style="position: relative; width: min-content;">
+            <button @click="htmx.find('#player-list').open ? htmx.find('#player-list').close() : htmx.find('#player-list').show()">Players</button>
+            <dialog id="player-list" style="position: absolute; top: 1.5rem; width: 10rem;">
+                <div style="width:100%; background-color: indianred;">
+                    <h2>Player List</h2>
+                    <div>
+                        <button style="border: none;" @click="traveller.showModal('player-info')">
+                            <h6>Player Char Name</h6>
+                            <p>AKA: (USERNAME)</p>
+                            <p>Status: <span>Player Creation</span></p>
+                         </button> 
+                    </div>
+                </div>
+            </dialog>
+        </div>
     </header>
     <main style="display: flex;overflow: hidden; height: 100%;">
-        <aside style="width:10%; background-color: indianred;">
-            <h2>Player List</h2>
-            <div>
-                <button style="border: none;" @click="traveller.showModal('player-info')">
-                    <h6>Player Char Name</h6>
-                    <p>AKA: (USERNAME)</p>
-                    <p>Status: <span>Player Creation</span></p>
-                 </button> 
-            </div>
-        </aside>
         <section style="flex: 1 1 auto; background-color: black;">
-        
+            <svg style="height: 100%; width: 100%;"></svg>
         </section>
         <section style="width: 15%;background-color: yellowgreen;display: flex;flex-direction: column;gap:4px;">
             <h3>Notifcations</h3>
@@ -68,41 +73,41 @@
                         <h3>Characteristics</h3>
                         <div style="display: flex; justify-content:space-evenly; flex-wrap: wrap; align-content: flex-start;">
                             <div>
-                                <div>Strenght: <input value="4" style="width: 15px;"/></div>
-                                <span>DM: <input value="-1" style="width: 15px;"/> </span>
+                                <div>Strenght: <span>4</span></div>
+                                <span>DM: <span>-1</span></span>
                             </div>
                             <div>
-                                <div>Dexterity: <input value="9" style="width: 15px;"/></div>
-                                <span>DM: <input value="1" style="width: 15px;"/></span>
+                                <div>Dexterity: <span>9</span></div>
+                                <span>DM: <span>1</span></span>
                             </div>
                             <div>
-                                <div>Endurance: <input value="3" style="width: 15px;"/></div>
-                                <span>DM: <input value="-1" style="width: 15px;"/> </span>
+                                <div>Endurance: <span>3</span></div>
+                                <span>DM: <span>-1</span></span>
                             </div>
                             <div>
-                                <div>Intellect: <input value="12" style="width: 15px;"/></div>
-                                <span>DM: <input value="2" style="width: 15px;"/></span>
+                                <div>Intellect: <span>12</span></div>
+                                <span>DM: <span>2</span></span>
                             </div>
                             <div>
-                                <div>Education: <input value="5" style="width: 15px;"/></div>
-                                <span>DM: <input value="-1" style="width: 15px;"/> </span>
+                                <div>Education: <span>5</span></div>
+                                <span>DM: <span>-1</span></span>
                             </div>
                             <div>
-                                <div>Social: <input value="7" style="width: 15px;"/></div>
-                                <span>DM: <input value="0" style="width: 15px;"/></span>
+                                <div>Social: <span>7</span></div>
+                                <span>DM: <span>0</span></span>
                             </div>
                         </div>
                         <div>
-                            <span>PSI: <input value="0" style="width: 15px;"/></span>
-                            <span>DM: <input value="0" style="width: 15px;"/></span>
+                            <span>PSI: <span>0</span></span>
+                            <span>DM: <span>0</span></span>
                         </div>
                     </div>
                     <div data-id="skills" style="height: 100%;">
                         <h3>Skills</h3>
                         <div style="overflow-y: scroll; scrollbar-width: thin; height: 100%;">
-                            <div>Astrogation: <input value="1" style="width: 15px;"/></div>
-                            <div>Athletics (dexterity)  <input vaule="0" style="width: 15px;"/> </div>
-                            <div>Flyer (wing)  <input value="1" style="width: 15px;"/></div>
+                            <div>Astrogation: <span>1</span></div>
+                            <div>Athletics (dexterity) <span>0</span></div>
+                            <div>Flyer (wing) <span>1</span></div>
                         </div>
                     </div>
                 </div>
