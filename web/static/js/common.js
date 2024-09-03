@@ -1,6 +1,6 @@
 import { ReconnectingWebsocket } from "./reconnecting_websocket.js";
-
-
+import { makePlanet, Galaxy } from "./galaxy_editor.js";
+import { Vector2 , MathUtils } from "three";
 /**
  * Fetchs session from url
  * @returns {string}
@@ -11,8 +11,8 @@ function getSessionId(){
 }
 
 class Client {
-
-
+    /** @type {Galaxy} */
+    system;
     /**@type {ReconnectingWebsocket} */
     #ws
     /**@type {string} */
@@ -133,10 +133,65 @@ class Client {
         if(!this.#ws) throw new Error("Websocket is not ready!");
         this.#ws.send(JSON.stringify({ contentType:"PrivateMessage",  payload: { Message: message, Target: userId } }));
     }
+
+
+    initWorld(){
+        /**
+         * @type {HTMLDivElement}
+         */
+        const container = document.getElementById("gallexy-view");
+
+        this.system = new Galaxy(container);
+
+        this.system.init(true);
+
+        this.system.camera.position.set(0,25,20);
+        this.system.camera.rotation.set(-0.90,0,0);
+    
+        const MOON_RADIUS = 0.27;
+        const EARTH_RADIUS = 1;
+
+        const earth = makePlanet({
+            radius: EARTH_RADIUS,
+            mat: {
+                specular: 0x333333,
+                shininess: 5,
+                map: this.system.textureLoader.load("/static/textures/planets/earth_atmos_2048.jpg"),
+                specularMap: this.system.textureLoader.load("/static/textures/planets/earth_specular_2048.jpg"),
+                normalMap: this.system.textureLoader.load("/static/textures/planets/earth_normal_2048.jpg"),
+                normalScale: new Vector2(0.85,0.85)
+            },
+            label: "Earth",
+        });
+
+        const moon = makePlanet({
+            radius: MOON_RADIUS,
+            mat: {
+                shininess: 5,
+                map: this.system.textureLoader.load("/static/textures/planets/moon_1024.jpg")
+            },
+            label: "Moon"
+        });
+
+        this.system.scene.add(earth,moon);
+
+        this.system.render = (elapsed) => {
+            moon.position.set( Math.sin( elapsed ) * 5, 0, Math.cos( elapsed ) * 5 );
+        }
+
+        this.system.animate();
+    }
 }
 
 const client = new Client();
 client.init();
+
+const inter = setInterval(()=>{
+    if(document.getElementById("gallexy-view") !== null){
+        client.initWorld();
+        clearInterval(inter);
+    };
+},3000);
 
 
 /**
