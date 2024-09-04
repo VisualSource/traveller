@@ -1,5 +1,6 @@
 import { Clock,TextureLoader,Scene, DirectionalLight, AxesHelper, SphereGeometry,MeshPhongMaterial,SRGBColorSpace, PerspectiveCamera, Vector2, Mesh, WebGLRenderer, Vector3, } from "three";
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 /** 
  * @typedef {{ mat: import("three").MeshPhongMaterialParameters, radius?: number, position: Vector3, label: string }} PlanetOptions */
 
@@ -26,8 +27,8 @@ export function makePlanet(opts = {}){
 
     const clickable = document.createElement("div");
     clickable.style.borderRadius = "100%";
-    clickable.style.height = `${16}px`;
-    clickable.style.width = `${16}px`;
+    clickable.style.height = `${32}px`;
+    clickable.style.width = `${32}px`;
     clickable.addEventListener("click",()=>{
         console.log("Item");
     })
@@ -54,6 +55,8 @@ export class Galaxy {
     labelRenderer
     /** @type {HTMLElement} */
     container
+    /** @type {OrbitControls} */
+    controls
     /**
      * 
      * @param {HTMLElement} container 
@@ -98,6 +101,12 @@ export class Galaxy {
         this.labelRenderer.setSize(this.width,this.height);
         this.labelRenderer.domElement.style.position = "absolute";
         this.labelRenderer.domElement.style.top = "0px";
+
+
+        this.controls = new OrbitControls(this.camera,this.labelRenderer.domElement);
+        this.controls.minDistance = 5;
+        this.controls.maxDistance = 100;
+        this.controls.enableRotate = false;
 
         this.container.appendChild(this.labelRenderer.domElement);
         window.addEventListener("resize",this.resize);

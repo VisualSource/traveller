@@ -145,7 +145,7 @@ class Client {
 
         this.system.init(true);
 
-        this.system.camera.position.set(0,25,20);
+        this.system.camera.position.set(0,11,10);
         this.system.camera.rotation.set(-0.90,0,0);
     
         const MOON_RADIUS = 0.27;
